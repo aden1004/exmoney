@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>환율 투자 기록</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1>💱 환율 투자 기록</h1>
+        <p>달러, 엔화, 유로 투자를 쉽게 관리하세요</p>
+    </header>
+    
+    <main class="container">
+        <div class="currency-grid" id="currencyGrid">
+            <a href="usd.html" class="currency-card">
+                <div class="flag">🇺🇸</div>
+                <div class="name">달러</div>
+                <div class="rate">현재 환율</div>
+                <div class="rate-value" id="usd-rate">-</div>
+            </a>
+            
+            <a href="jpy.html" class="currency-card">
+                <div class="flag">🇯🇵</div>
+                <div class="name">엔화</div>
+                <div class="rate">100엔 기준</div>
+                <div class="rate-value" id="jpy-rate">-</div>
+            </a>
+            
+            <a href="eur.html" class="currency-card">
+                <div class="flag">🇪🇺</div>
+                <div class="name">유로</div>
+                <div class="rate">현재 환율</div>
+                <div class="rate-value" id="eur-rate">-</div>
+            </a>
+        </div>
+    </main>
+    
+    <script>
+        // 환율 조회
+        async function loadRates() {
+            try {
+                const res = await fetch('/api/exchange/rates');
+                const data = await res.json();
+                
+                if (data.success) {
+                    document.getElementById('usd-rate').textContent = 
+                        '₩' + Math.round(data.rates.USD).toLocaleString();
+                    document.getElementById('jpy-rate').textContent = 
+                        '₩' + Math.round(data.rates.JPY * 100).toLocaleString();
+                    document.getElementById('eur-rate').textContent = 
+                        '₩' + Math.round(data.rates.EUR).toLocaleString();
+                }
+            } catch (err) {
+                console.error('환율 조회 실패:', err);
+            }
+        }
+        
+        loadRates();
+    </script>
+</body>
+</html>
